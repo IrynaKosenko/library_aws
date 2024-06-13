@@ -1,4 +1,4 @@
-version: "3.1"
+# version: "3.1"
 networks:
   library_network:
     driver: bridge
@@ -9,7 +9,7 @@ services:
     container_name: mysql-db
     restart: always
     ports:
-      - 3307:${MYSQL_PORT}
+      - ${MYSQL_DATABASE_PORT}:${MYSQL_PORT}
     env_file:
       - .env
     environment:
@@ -18,7 +18,7 @@ services:
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
-      - myapp:/home/app
+      - app:/home/app
     networks:
       - library_network
 
@@ -55,31 +55,45 @@ services:
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_PORT: ${MYSQL_PORT}
     restart: always
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx-cont
-    ports:
-      - 80:80
-      - 443:443
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
-      - ./certbot/www/:/var/www/certbot/:ro
-    depends_on:
-      - library
-    networks:
-      - library_network
-    restart: always
+      - ./src:/usr/src/app/src
 
-  certbot:
-    image: certbot/certbot:latest
-    container_name: certbot
-    depends_on: nginx-cont
-    networks:
-      - library_network
-    volumes:
-      - ./certbot/www/:/var/www/certbot/:rw
-      - ./certbot/conf/:/etc/letsencrypt/:rw
+  # caddy:
+  #   image: caddy:2-alpine
+  #   container_name: caddy
+  #   restart: unless-stopped
+  #   ports:
+  #     - 80:80  
+  #     - 443:443
+  #   volumes:
+  #     - ./Caddyfile:/etc/caddy/Caddyfile
+  #   networks: 
+  #     - library_network
+
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: nginx-cont
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+  #     - ./certbot/www/:/var/www/certbot/:ro
+  #   depends_on:
+  #     - library
+  #   networks:
+  #     - library_network
+  #   restart: always
+
+  # certbot:
+  #   image: certbot/certbot:latest
+  #   container_name: certbot
+  #   depends_on: nginx-cont
+  #   networks:
+  #     - library_network
+  #   volumes:
+  #     - ./certbot/www/:/var/www/certbot/:rw
+  #     - ./certbot/conf/:/etc/letsencrypt/:rw
 
 volumes:
-  myapp:
+  app:

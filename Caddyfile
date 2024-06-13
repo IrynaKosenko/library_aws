@@ -1,0 +1,6 @@
+school-library.site {
+        reverse_proxy library:3000
+}
+school-library.site {
+    reverse_proxy phpmyadmin:8081
+}
