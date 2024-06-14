@@ -1,0 +1,34 @@
+networks:
+  library_network:
+    driver: bridge
+
+services:
+  library:
+    build: .
+    container_name: library
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+      - library_network
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE_HOST: ${MYSQL_DATABASE_HOST}
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_PORT: ${MYSQL_PORT}
+    restart: always
+    volumes:
+      - ./src:/usr/src/app/src
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - 80:80  
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    networks: 
+      - library_network

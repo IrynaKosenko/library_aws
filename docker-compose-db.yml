@@ -1,3 +1,4 @@
+# This file should be run on other server (EC2 instance) with .env. Open port 3306
 networks:
   library_network:
     driver: bridge
@@ -8,7 +9,7 @@ services:
     container_name: mysql-db
     restart: always
     ports:
-      - 3307:${MYSQL_PORT}
+      - ${MYSQL_PORT}:${MYSQL_PORT}
     env_file:
       - .env
     environment:
@@ -20,6 +21,8 @@ services:
       - myapp:/home/app
     networks:
       - library_network
+    expose:
+      - ${MYSQL_PORT}
 
   phpmyadmin:
     image: phpmyadmin
