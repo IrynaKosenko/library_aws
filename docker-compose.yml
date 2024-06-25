@@ -4,7 +4,8 @@ networks:
 
 services:
   library:
-    build: .
+    #build: .
+    image: irynakos/school-library:latest
     container_name: library
     ports:
       - ${PORT}:${PORT}
