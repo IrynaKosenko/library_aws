@@ -12,7 +12,7 @@ services:
     networks:
       - library_network
     env_file:
-      - .env
+      - ./.env
     environment:
       MYSQL_DATABASE_HOST: ${MYSQL_DATABASE_HOST}
       MYSQL_USER: ${DATABASE_USER}

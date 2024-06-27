@@ -1,8 +1,3 @@
-www.school-library.site {
+school-library.site {
 	reverse_proxy library:3000
-}
-
-
-:80 {
-	reverse_proxy localhost:8111
 }
